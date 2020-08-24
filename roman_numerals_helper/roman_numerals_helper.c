@@ -1,7 +1,3 @@
-
-#include <stdio.h>
-#include <stdlib.h>
-
 /*42 school - style  )*/
 int	get_num(char r_dgit)
 {
