@@ -1,0 +1,8 @@
+Given non-negative integer a and positive integer b as C-strings, return a pointer "array" char ** of length 2 containing the quotient and remainder of the result in that order. The quotient and remainder should both be pointer-strings and not character arrays; furthermore, their memory (and the memory of the entire pointer "array") should be dynamically allocated as the test cases will free the memory allocated for your result which would throw an error otherwise.
+
+Since the length of the pointer "array" is expected to be constant, there is no point in passing an int/size_t by reference and having your solution set it to the length of the output array.
+
+a and b can be very large (at the order of 10^150 to 10^200)
+As usual, your result should not have leading 0s
+
+require is disabled in JavaScript. Do it yourself ;-)
