@@ -49,11 +49,14 @@ int		ft_strcmp(char *s1, char *s2)
 int		ft_num_strcmp(char *s1, char *s2)
 {
 	t_int_pair	len;
+	int	prev_zeros=0;
 	len.a = 	ft_strlen(s1);
 	len.b = 	ft_strlen(s2);
-	if(len.a < len.b)
+	for(int i = 0; i < len.a && s1[i] =='0';i++)
+			prev_zeros++;
+	if(len.a-prev_zeros < len.b)
 		return -1;
-	if(len.a > len.b)
+	if(len.a-prev_zeros > len.b)
 		return 1;
 	if(s1 == NULL && s2 == NULL)
 		return 0;
@@ -61,6 +64,8 @@ int		ft_num_strcmp(char *s1, char *s2)
 		return -1;
 	if(s2 == NULL)
 		return 1;
+	while(*s1 == '0')
+		s1++;
 
 	while (*s1 != '\0' &&*s2 != '\0' && (*s1 == *s2))
 	{
@@ -166,7 +171,6 @@ char		*mult (char *a, char *b)
 				res[k - 1] = res[k - 1] + 1;
 				k--;
 			}
-			//printf("%s\n", res);
 		}
 	}
 	if(res[0] == '0')
@@ -225,7 +229,6 @@ char	*sub(char *a, char *b)
 	i = 0;
 	while(i < len.b)
 	{
-		//printf("%d\n", i);
 		k = len.a - 1 - i;
 		res[k] = res[k] - b[len.b-1-i] + '0';
 		while(res[k] < '0')
@@ -295,13 +298,11 @@ char	**divide_strings(char *a, char *b)
 	res_part[1] = '\0';
 	free_if(&sub_res);
 	sub_res = ft_strdup(b);
-//	printf("zeros: [%d]\n", count_back_zeros(a,b));
 	while (ft_num_strcmp(sub_res,head) < 0 &&res_part[0] <= '9')
 	{
 		free_if(&sub_res);
 		res_part[0] = res_part[0] + 1;
 		sub_res = mult(b,res_part);
-		printf("head: [%s] sub_res: [%s] res_part: [%s] tail: [%d]\n",head ,sub_res, res_part,tail );
   	}
 	if(ft_num_strcmp(sub_res,head) != 0)
 	{
@@ -311,41 +312,33 @@ char	**divide_strings(char *a, char *b)
 		sub_res = sub(sub_res,b);
 		free_if(&tmp);
 	}
-
-	printf("|| head: [%s] sub_res: [%s] res_part: [%s] tail: [%d]\n",head ,sub_res, res_part,tail );
-	
 	tmp = head;
 	head = sub(head,sub_res);
 	free_if(&tmp);
-
 	push(&(res[0]), res_part, BACK);
-	
-
-	while(tail < len.a && ft_num_strcmp(head, b) < 0)
+	while((tail < len.a && ft_num_strcmp(head, b) < 0))
 	{
 		res_part[0] = a[tail];
+		push(&head, res_part, BACK);
+		if(ft_num_strcmp(head, b) < 0)
+			push(&(res[0]),"0",BACK);
 		tail++;
-		if(ft_strcmp(head,"0") == 0 && len.a-tail <= back_zeros)
-			push(&(res[0]), res_part, BACK);
-		else
-			push(&head, res_part, BACK);
-
 	}
-	
-	
-
-	if (ft_num_strcmp(head, b) <= 0 && tail == len.a)
+	if (ft_num_strcmp(head, b) < 0 && tail == len.a)
 	{
-		if(ft_strcmp(head,"") == 0)
-			push(&head,"0",BACK);
+			
+		if(head[0] == '0' && ft_strlen(head)!= 1)
+		{
+			while(head[0] == '0' && ft_strlen(head) != 1)
+				left_shift(head);
+		}
+		
 		res[1] = head;
 		free_if(&res_part);
 		free_if(&sub_res);
 		return res;
 	}
 	}
-	//free_if(&head);
-	
 	return res;
 }
 
@@ -353,18 +346,8 @@ int main(int ac, char **av)
 {
 	char **res = divide_strings(av[1], av[2]);
 
-	//push(&str, av[1], BACK);
-	//printf(">>%s<<\n", sub(av[1], av[2]));
-	//printf(">>%s<<\n", mult(av[1], av[2]));
+
 	printf(">>%s<<\n",res[0]);
 	printf(">>%s<<\n",res[1]);
 
-	//char *a= "qwerty";
-	//char  *b = ft_strdup(a);
-	//char  *c = ft_strdup(b);
-	//printf("%s  %s  %s\n",a,b,c);
-	//free_if(&b);
-	//printf("%s  %s  %s\n",a,b,c);
-
-	//printf("%s\n", str);
 }
